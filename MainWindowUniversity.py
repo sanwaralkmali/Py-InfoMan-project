@@ -13,6 +13,8 @@ import time
 import MainWindowDepartments
 import MainWindowStudent
 import LoginDialog as loginDialog
+import ShowAllDepartment
+import UniversitySearch
 
 
 class MainWindowUniversity(QMainWindow):
@@ -89,13 +91,6 @@ class MainWindowUniversity(QMainWindow):
         self.container.setFixedWidth(20)
         toolbar.addWidget(self.container)
 
-        show_deparments = QAction(
-            QIcon("icon/info.png"), "Show Departments", self)
-        show_deparments.triggered.connect(
-            lambda: self.showdeparments(main_layout))
-        show_deparments.setStatusTip("Show Departments")
-        toolbar.addAction(show_deparments)
-
         self.container = QWidget(self)
         self.container.setFixedWidth(650)
         toolbar.addWidget(self.container)
@@ -127,6 +122,11 @@ class MainWindowUniversity(QMainWindow):
         layout.addWidget(loout_Btn, 0, 3)
 
         toolbar.addWidget(self.container2)
+
+        show_deparments = QAction(
+            QIcon("icon/school.png"), "Show All Deparments", self)
+        show_deparments.triggered.connect(self.show_all_departments)
+        file_menu.addAction(show_deparments)
 
         adduser_action = QAction(
             QIcon("icon/real-estate.png"), "Insert University", self)
@@ -218,22 +218,26 @@ class MainWindowUniversity(QMainWindow):
         self.loaddata()
 
     def delete_all(self):
-        try:
-            self.conn = sqlite3.connect("info.db")
-            self.c = self.conn.cursor()
-            self.c.execute("DELETE from Universities")
-            self.conn.commit()
-            self.c.close()
-            self.conn.close()
-            QMessageBox.information(
-                QMessageBox(), 'Successful', 'All the records are removed from the database.')
+        qm = QMessageBox()
+        ret = qm.question(
+            self, '', "Are you sure to remove all the students?", qm.Yes | qm.No)
+        if ret == qm.Yes:
+            try:
+                self.conn = sqlite3.connect("info.db")
+                self.c = self.conn.cursor()
+                self.c.execute("DELETE from Universities")
+                self.conn.commit()
+                self.c.close()
+                self.conn.close()
+                QMessageBox.information(
+                    QMessageBox(), 'Successful', 'All the records are removed from the database.')
 
-        except Exception as error:
-            print(error)
-            QMessageBox.warning(QMessageBox(), 'Error',
-                                'Could not delete the records from the database.')
+            except Exception as error:
+                print(error)
+                QMessageBox.warning(QMessageBox(), 'Error',
+                                    'Could not delete the records from the database.')
 
-        self.loaddata()
+            self.loaddata()
 
     def search(self):
         dlg = SearchDialog.SearchUniversity()
@@ -243,17 +247,10 @@ class MainWindowUniversity(QMainWindow):
         dlg = AboutDialog.AboutDialog()
         dlg.exec_()
 
-    def search_by(self, income):
-        print(income)
-
-    def showdeparments(self, main_layout):
-       # self.widef = QWidget(self)
-        # self.widef.setFixedWidth(100)
-        #self.but = QPushButton(self.widef)
-        # self.but.clicked.connect(
-        #   lambda: self.removwidget(main_layout, self.widef))
-        #main_layout.addWidget(self.widef, 0, 1)
-        return
+    def show_all_departments(self):
+        window = ShowAllDepartment.ShowAllDepartment(self)
+        window.show()
+        window.loaddata()
 
     def removwidget(self, main_layout, widef):
         main_layout.removeWidget(self.widef)
@@ -281,3 +278,12 @@ class MainWindowUniversity(QMainWindow):
 
     def close_app(self):
         self.close()
+
+    def search_by(self, parmeter):
+        if(parmeter.strip() == ""):
+            QMessageBox.warning(QMessageBox(), 'Error',
+                                'Yu must enter at leasr one key word!')
+        else:
+            window = UniversitySearch.UniversitySearch(self)
+            window.show()
+            window.loaddata(parmeter)

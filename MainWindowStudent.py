@@ -13,6 +13,7 @@ import time
 import MainWindowUniversity
 import LoginDialog as loginDialog
 import ShowAllDepartment
+import StudentSearch
 
 
 class MainWindowStudent(QMainWindow):
@@ -41,22 +42,20 @@ class MainWindowStudent(QMainWindow):
         self.tableWidget.horizontalHeader().setSortIndicatorShown(False)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
-        self.tableWidget.setFixedWidth(700)
+        self.tableWidget.setFixedWidth(850)
         self.tableWidget.setColumnWidth(0, 50)
-        self.tableWidget.setColumnWidth(1, 170)
-        self.tableWidget.setColumnWidth(2, 145)
-        self.tableWidget.setColumnWidth(3, 120)
-        self.tableWidget.setColumnWidth(4, 200)
+        self.tableWidget.setColumnWidth(1, 190)
+        self.tableWidget.setColumnWidth(2, 160)
+        self.tableWidget.setColumnWidth(3, 150)
+        self.tableWidget.setColumnWidth(4, 290)
         self.tableWidget.setHorizontalHeaderLabels(
             ("ID", "Name", "Surname", "Mobile", "Details"))
 
         main_layout.addWidget(self.tableWidget, 0, 0)
         self.setCentralWidget(self.main_container)
-
         toolbar = QToolBar()
-        toolbar.setMovable(True)
+        toolbar.setMovable(False)
         self.addToolBar(toolbar)
-
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
@@ -89,12 +88,6 @@ class MainWindowStudent(QMainWindow):
         self.container.setFixedWidth(20)
         toolbar.addWidget(self.container)
 
-        show_deparments = QAction(
-            QIcon("icon/info.png"), "Show Departments", self)
-        show_deparments.triggered.connect(self.show_all_departments)
-        show_deparments.setStatusTip("Show Departments")
-        toolbar.addAction(show_deparments)
-
         self.container = QWidget(self)
         self.container.setFixedWidth(650)
         toolbar.addWidget(self.container)
@@ -107,7 +100,6 @@ class MainWindowStudent(QMainWindow):
         search_by_name.setPlaceholderText("search")
         search_by_name.setFixedWidth(200)
         layout.addWidget(search_by_name, 0, 0)
-       # toolbar.addWidget(search_by_name)
 
         QBtn = QPushButton()
         QBtn.setIcon(QIcon("icon/search.png"))
@@ -121,12 +113,15 @@ class MainWindowStudent(QMainWindow):
 
         space = QWidget(self)
         space.setFixedWidth(50)
-
         layout.addWidget(QBtn, 0, 1)
         layout.addWidget(space, 0, 2)
         layout.addWidget(loout_Btn, 0, 3)
-
         toolbar.addWidget(self.container2)
+
+        show_deparments = QAction(
+            QIcon("icon/school.png"), "Show All Deparments", self)
+        show_deparments.triggered.connect(self.show_all_departments)
+        file_menu.addAction(show_deparments)
 
         adduser_action = QAction(QIcon("icon/add.png"), "Insert Student", self)
         adduser_action.triggered.connect(self.insert)
@@ -190,20 +185,23 @@ class MainWindowStudent(QMainWindow):
         self.loaddata()
 
     def delete_all(self):
-        try:
-            self.conn = sqlite3.connect("info.db")
-            self.c = self.conn.cursor()
-            self.c.execute("DELETE from Students")
-            self.conn.commit()
-            self.c.close()
-            self.conn.close()
-            QMessageBox.information(
-                QMessageBox(), 'Successful', 'All the records are removed from the database.')
+        qm = QMessageBox()
+        ret = qm.question(
+            self, '', "Are you sure to remove all the students?", qm.Yes | qm.No)
+        if ret == qm.Yes:
+            try:
+                self.conn = sqlite3.connect("info.db")
+                self.c = self.conn.cursor()
+                self.c.execute("DELETE from Students")
+                self.conn.commit()
+                self.c.close()
+                self.conn.close()
+                QMessageBox.information(
+                    QMessageBox(), 'Successful', 'All the records are removed from the database.')
 
-        except Exception as error:
-            print(error)
-            QMessageBox.warning(QMessageBox(), 'Error',
-                                'Could not delete the records from the database.')
+            except Exception as error:
+                QMessageBox.warning(QMessageBox(), 'Error',
+                                    'Could not delete the records from the database.')
 
         self.loaddata()
 
@@ -214,12 +212,6 @@ class MainWindowStudent(QMainWindow):
     def about(self):
         dlg = AboutDialog.AboutDialog()
         dlg.exec_()
-
-    def search_by(self, income):
-        print(income)
-
-    def showdeparments(self):
-        return
 
     def logout(self):
         self.close()
@@ -240,7 +232,15 @@ class MainWindowStudent(QMainWindow):
         self.close()
 
     def show_all_departments(self):
-        print("hello")
         window = ShowAllDepartment.ShowAllDepartment(self)
         window.show()
         window.loaddata()
+
+    def search_by(self, parmeter):
+        if(parmeter.strip() == ""):
+            QMessageBox.warning(QMessageBox(), 'Error',
+                                'Yu must enter at leasr one key word!')
+        else:
+            window = StudentSearch.StudentSearch(self)
+            window.show()
+            window.loaddata(parmeter)
