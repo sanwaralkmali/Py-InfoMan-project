@@ -25,11 +25,13 @@ Manage your database using Infoman (Student , universities and departments) , < 
 # What is included in this project ?
 * Login System
 
-* Student Window
-    @ Show Students  
+* Student Window  
+		@ Show Students
 		@ Add Students
 		@ Delete Students
 		@ Search for Student
+		@ Delete all Students
+
 
 
 * University Window  
@@ -39,12 +41,15 @@ Manage your database using Infoman (Student , universities and departments) , < 
 		@ Search for University
 		@ Insert a Department to University
 		@ Get all Department in University
+		@ Delete all Universities
 
 
 * Department Window  
 		@ List Departments 		
 		@ Add Department
 		@ Search for Department
+		@ Delete A Department
+		@ Delete All Departments
 
 * Logout System 
                      

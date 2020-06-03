@@ -52,7 +52,6 @@ class InsertDialog(QDialog):
                                (name, surname, mobile, detailes))
                 self.conn.commit()
                 self.c.close()
-                self.conn.close()
                 QMessageBox.information(
                     QMessageBox(), 'Successful', 'Student is added successfully to the database.')
 
@@ -61,6 +60,10 @@ class InsertDialog(QDialog):
         except Exception:
             QMessageBox.warning(QMessageBox(), 'Error',
                                 'Could not add student to the database.')
+
+        finally:
+            if(self.conn):
+                self.conn.close()
 
         self.close()
 
@@ -77,7 +80,7 @@ class InsertUniversity(QDialog):
         self.setFixedWidth(200)
         self.setFixedHeight(150)
 
-        self.QBtn.clicked.connect(self.addstudent)
+        self.QBtn.clicked.connect(self.add_university)
 
         layout = QVBoxLayout()
 
@@ -88,19 +91,17 @@ class InsertUniversity(QDialog):
         layout.addWidget(self.QBtn)
         self.setLayout(layout)
 
-    def addstudent(self):
+    def add_university(self):
 
         name = self.nameinput.text()
-
         try:
+            self.conn = sqlite3.connect("info.db")
             if(name.strip() != ""):
-                self.conn = sqlite3.connect("info.db")
                 self.c = self.conn.cursor()
                 self.c.execute(
                     "INSERT INTO Universities (uni_name) VALUES ('"+name+"')")
                 self.conn.commit()
                 self.c.close()
-                self.conn.close()
                 QMessageBox.information(
                     QMessageBox(), 'Successful', 'University is added successfully to the database.')
 
@@ -110,6 +111,10 @@ class InsertUniversity(QDialog):
         except Exception:
             QMessageBox.warning(QMessageBox(), 'Error',
                                 'Could not add university to the database.')
+
+        finally:
+            if(self.conn):
+                self.conn.close()
         self.close()
 
 
@@ -149,7 +154,7 @@ class InsertDepartment(QDialog):
         name = self.nameinput.text()
         price = self.priceInput.text()
         info = self.InfoInput.text()
-        message = "This record alredy i your database! "
+        message = "This record alredy in your database! "
 
         try:
             if(name.strip() != "" and price.strip() != ""):
@@ -159,9 +164,8 @@ class InsertDepartment(QDialog):
                     "INSERT INTO Departments (uni_id,dep_name,price,info) VALUES (?,?,?,?)", (uniId, name, price, info))
                 self.conn.commit()
                 self.c.close()
-                self.conn.close()
                 QMessageBox.information(
-                    QMessageBox(), 'Successful', 'University is added successfully to the database.')
+                    QMessageBox(), 'Successful', 'Department is added successfully to the database.')
 
             else:
                 if(name.strip() == ""):
@@ -172,9 +176,12 @@ class InsertDepartment(QDialog):
                 elif(price.strip() == ""):
                     message = "You forgot to enter the department's Price! "
 
-                c = 5/0
-
-        except Exception:
+        except sqlite3.Error as error:
+            print(error)
             QMessageBox.warning(QMessageBox(), 'Error', message)
+
+        finally:
+            if(self.conn):
+                self.conn.close()
 
         self.close()

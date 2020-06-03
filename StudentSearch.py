@@ -20,21 +20,23 @@ class StudentSearch(QMainWindow):
         self.tableWidget = QTableWidget()
         self.setCentralWidget(self.tableWidget)
         self.tableWidget.setAlternatingRowColors(True)
-        self.tableWidget.setColumnCount(5)
+        self.tableWidget.setColumnCount(6)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.horizontalHeader().setSortIndicatorShown(False)
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
-        self.tableWidget.setColumnWidth(0, 50)
-        self.tableWidget.setColumnWidth(1, 200)
-        self.tableWidget.setColumnWidth(2, 180)
-        self.tableWidget.setColumnWidth(3, 200)
-        self.tableWidget.setColumnWidth(4, 350)
+        self.tableWidget.setColumnWidth(0, 40)
+        self.tableWidget.setColumnWidth(1, 180)
+        self.tableWidget.setColumnWidth(2, 160)
+        self.tableWidget.setColumnWidth(3, 180)
+        self.tableWidget.setColumnWidth(4, 320)
+        self.tableWidget.setColumnWidth(5, 100)
+
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.tableWidget.setHorizontalHeaderLabels(
-            ("ID", "Name", "Surname", "Phone Number", "Detailes"))
+            ("ID", "Name", "Surname", "Phone Number", "Detailes", "Delete"))
 
         toolbar = QToolBar()
         toolbar.setMovable(False)
@@ -68,7 +70,36 @@ class StudentSearch(QMainWindow):
             for column_number, data in enumerate(row_data):
                 self.tableWidget.setItem(
                     row_number, column_number, QTableWidgetItem(str(data)))
+
+            remove_stu_btn = QPushButton(self.tableWidget)
+            remove_stu_btn.setText('remove')
+            remove_stu_btn.clicked.connect(self.delte_student)
+            self.tableWidget.setCellWidget(row_number, 5, remove_stu_btn)
+
         self.connection.close()
 
     def close_app(self):
         self.close()
+
+    def delte_student(self):
+        qm = QMessageBox()
+        ret = qm.question(
+            self, '', "Are You sure?", qm.Yes | qm.No)
+        if ret == qm.Yes:
+            delrol = self.tableWidget.item(
+                self.tableWidget.currentRow(), 0).text()
+            try:
+                self.conn = sqlite3.connect("info.db")
+                self.c = self.conn.cursor()
+                self.c.execute(
+                    "DELETE from Students WHERE stu_id="+str(delrol))
+                self.conn.commit()
+                self.c.close()
+                QMessageBox.information(
+                    QMessageBox(), 'Successful', 'Student removed from the database ')
+            except Exception:
+                QMessageBox.warning(QMessageBox(), 'Error',
+                                    'This Id in not valid!')
+            finally:
+                if(self.conn):
+                    self.conn.close()

@@ -18,7 +18,6 @@ class MainWindowDepartments(QMainWindow):
     def __init__(self, u_id, u_name, * args, **kwargs):
         super(MainWindowDepartments, self).__init__(*args, **kwargs)
 
-        self.setWindowFlag(Qt.WindowCloseButtonHint, False)
         self.setMinimumSize(800, 700)
         self.setMaximumSize(800, 700)
 
@@ -40,8 +39,12 @@ class MainWindowDepartments(QMainWindow):
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
+        self.tableWidget.setColumnWidth(0, 180)
+        self.tableWidget.setColumnWidth(1, 140)
+        self.tableWidget.setColumnWidth(2, 380)
+        self.tableWidget.setColumnWidth(3, 100)
         self.tableWidget.setHorizontalHeaderLabels(
-            ("uni_id", "name", "price", "detailes"))
+            ("Department", "price", "detailes", "Delete"))
 
         toolbar = QToolBar()
         toolbar.setMovable(False)
@@ -71,7 +74,7 @@ class MainWindowDepartments(QMainWindow):
 
         close_deparments = QAction(
             QIcon("icon/logout.png"), "Logout", self)
-        close_deparments.triggered.connect(self.closedeparments)
+        close_deparments.triggered.connect(self.close_app)
         close_deparments.setStatusTip("Logout")
         toolbar.addAction(close_deparments)
 
@@ -86,7 +89,8 @@ class MainWindowDepartments(QMainWindow):
 
     def loaddata(self, uniIDP):
         self.connection = sqlite3.connect("info.db")
-        query = "SELECT * FROM Departments WHERE uni_id=" + str(uniIDP)
+        query = "SELECT dep_name , price , info FROM Departments WHERE uni_id=" + \
+            str(uniIDP)
         result = self.connection.execute(query)
         self.tableWidget.setRowCount(0)
         for row_number, row_data in enumerate(result):
@@ -94,6 +98,12 @@ class MainWindowDepartments(QMainWindow):
             for column_number, data in enumerate(row_data):
                 self.tableWidget.setItem(
                     row_number, column_number, QTableWidgetItem(str(data)))
+
+            remove_dep_btn = QPushButton(self.tableWidget)
+            remove_dep_btn.setText('remove')
+            remove_dep_btn.clicked.connect(self.delete_department)
+            self.tableWidget.setCellWidget(row_number, 3, remove_dep_btn)
+
         self.connection.close()
 
     def handlePaintRequest(self, printer):
@@ -118,6 +128,37 @@ class MainWindowDepartments(QMainWindow):
         dlg.exec_()
         self.loaddata(uni_id)
 
+    def delete_department(self):
+        qm = QMessageBox()
+        ret = qm.question(
+            self, '', "Are You sure?", qm.Yes | qm.No)
+        if ret == qm.Yes:
+            unId = self.tableWidget.item(
+                self.tableWidget.currentRow(), 0).text()
+            depName = self.tableWidget.item(
+                self.tableWidget.currentRow(), 1).text()
+            try:
+                self.conn = sqlite3.connect("info.db")
+                self.c = self.conn.cursor()
+                self.c.execute(
+                    "DELETE from Departments WHERE uni_id=? AND dep_name=?", (unId, depName))
+
+                i = self.conn.commit()
+
+                QMessageBox.information(
+                    QMessageBox(), 'Successful', 'Department was Deleted From the database')
+
+                self.c.close()
+
+            except sqlite3.Error as errot:
+                QMessageBox.warning(QMessageBox(), 'Error',
+                                    'Could not Delete Department from the database.')
+
+            finally:
+                if(self.conn):
+                    self.conn.close()
+                    self.loaddata(unId)
+
     def delete_all(self, uni_id):
         try:
             self.conn = sqlite3.connect("info.db")
@@ -139,9 +180,6 @@ class MainWindowDepartments(QMainWindow):
     def about(self):
         dlg = AboutDialog.AboutDialog()
         dlg.exec_()
-
-    def closedeparments(self):
-        MainWindowDepartments.close(self)
 
     def close_app(self):
         self.close()
