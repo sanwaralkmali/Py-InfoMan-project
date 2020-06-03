@@ -62,6 +62,8 @@ class InsertDialog(QDialog):
             QMessageBox.warning(QMessageBox(), 'Error',
                                 'Could not add student to the database.')
 
+        self.close()
+
 
 class InsertUniversity(QDialog):
 
@@ -108,6 +110,7 @@ class InsertUniversity(QDialog):
         except Exception:
             QMessageBox.warning(QMessageBox(), 'Error',
                                 'Could not add university to the database.')
+        self.close()
 
 
 class InsertDepartment(QDialog):
@@ -159,7 +162,6 @@ class InsertDepartment(QDialog):
                 self.conn.close()
                 QMessageBox.information(
                     QMessageBox(), 'Successful', 'University is added successfully to the database.')
-                self.close()
 
             else:
                 if(name.strip() == ""):
@@ -174,4 +176,5 @@ class InsertDepartment(QDialog):
 
         except Exception:
             QMessageBox.warning(QMessageBox(), 'Error', message)
-            self.close()
+
+        self.close()

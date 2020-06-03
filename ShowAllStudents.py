@@ -13,21 +13,21 @@ import time
 import MainWindowUniversity
 
 
-class MainWindowDepartments(QMainWindow):
+class ShowAllStudents(QMainWindow):
 
-    def __init__(self, u_id, u_name, * args, **kwargs):
-        super(MainWindowDepartments, self).__init__(*args, **kwargs)
+    def __init__(self, * args, **kwargs):
+        super(ShowAllStudents, self).__init__(*args, **kwargs)
 
         self.setWindowFlag(Qt.WindowCloseButtonHint, False)
-        self.setMinimumSize(800, 700)
-        self.setMaximumSize(800, 700)
+        self.setMinimumSize(1000, 700)
+        self.setMaximumSize(1000, 700)
 
         self.conn = sqlite3.connect("info.db")
         self.c = self.conn.cursor()
-        uni_id = u_id
+
         file_menu = self.menuBar().addMenu("&File")
 
-        self.setWindowTitle(str(u_name)+" University")
+        self.setWindowTitle("All Students")
 
 #####################  Student Data  ###################
         self.tableWidget = QTableWidget()
@@ -50,21 +50,6 @@ class MainWindowDepartments(QMainWindow):
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
-        btn_ac_adduser = QAction(QIcon("icon/add.png"), "Add Department", self)
-        btn_ac_adduser.triggered.connect(lambda: self.insert(uni_id))
-        btn_ac_adduser.setStatusTip("Add Student")
-        toolbar.addAction(btn_ac_adduser)
-
-        btn_ac_refresh = QAction(QIcon("icon/refresh .png"), "Refresh", self)
-        btn_ac_refresh.triggered.connect(lambda: self.loaddata(u_id))
-        btn_ac_refresh.setStatusTip("Refresh Table")
-        toolbar.addAction(btn_ac_refresh)
-
-        btn_ac_delete = QAction(QIcon("icon/trash.png"), "Delete", self)
-        btn_ac_delete.triggered.connect(lambda: self.delete(u_id))
-        btn_ac_delete.setStatusTip("Delete User")
-        toolbar.addAction(btn_ac_delete)
-
         self.container = QWidget(self)
         self.container.setFixedWidth(650)
         toolbar.addWidget(self.container)
@@ -75,18 +60,13 @@ class MainWindowDepartments(QMainWindow):
         close_deparments.setStatusTip("Logout")
         toolbar.addAction(close_deparments)
 
-        rm_all_action = QAction(
-            QIcon("icon/criss-cross.png"), "Delete All Deparments", self)
-        rm_all_action.triggered.connect(lambda: self.delete_all(uni_id))
-        file_menu.addAction(rm_all_action)
-
         close_action = QAction(QIcon("icon/close.png"), "Close", self)
         close_action.triggered.connect(self.close_app)
         file_menu.addAction(close_action)
 
-    def loaddata(self, uniIDP):
+    def loaddata(self):
         self.connection = sqlite3.connect("info.db")
-        query = "SELECT * FROM Departments WHERE uni_id=" + str(uniIDP)
+        query = "SELECT * FROM Departments ORDER  BY uni_id"
         result = self.connection.execute(query)
         self.tableWidget.setRowCount(0)
         for row_number, row_data in enumerate(result):
@@ -108,40 +88,8 @@ class MainWindowDepartments(QMainWindow):
                 cursor.movePosition(QTextCursor.NextCell)
         document.print_(printer)
 
-    def insert(self, uniIDP):
-        dlg = InsertDialog.InsertDepartment(uniIDP)
-        dlg.exec_()
-        self.loaddata(uniIDP)
-
-    def delete(self, uni_id):
-        dlg = DeleteDialog.DeleteDepartment()
-        dlg.exec_()
-        self.loaddata(uni_id)
-
-    def delete_all(self, uni_id):
-        try:
-            self.conn = sqlite3.connect("info.db")
-            self.c = self.conn.cursor()
-            self.c.execute(
-                "DELETE from Departments Where uni_id=" + str(uni_id))
-            self.conn.commit()
-            self.c.close()
-            self.conn.close()
-            QMessageBox.information(
-                QMessageBox(), 'Successful', 'All the records are removed from the database.')
-
-        except Exception as error:
-            print(error)
-            QMessageBox.warning(QMessageBox(), 'Error',
-                                'Could not delete the records from the database.')
-        self.loaddata(uni_id)
-
-    def about(self):
-        dlg = AboutDialog.AboutDialog()
-        dlg.exec_()
-
     def closedeparments(self):
-        MainWindowDepartments.close(self)
+        self.close()
 
     def close_app(self):
         self.close()

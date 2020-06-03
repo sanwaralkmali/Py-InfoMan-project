@@ -28,7 +28,6 @@ class MainWindowUniversity(QMainWindow):
 
         file_menu = self.menuBar().addMenu("&File")
 
-        help_menu = self.menuBar().addMenu("&About")
         self.setWindowTitle("Universities Management")
         self.setWindowState(Qt.WindowMaximized)
         self.setMinimumWidth(500)
@@ -106,7 +105,7 @@ class MainWindowUniversity(QMainWindow):
         layout = QGridLayout(self.container2)
 
         search_by_name = QLineEdit()
-        search_by_name.setPlaceholderText("Name or surname")
+        search_by_name.setPlaceholderText("search")
         search_by_name.setFixedWidth(200)
         layout.addWidget(search_by_name, 0, 0)
 
@@ -139,17 +138,23 @@ class MainWindowUniversity(QMainWindow):
         searchuser_action.triggered.connect(self.search)
         file_menu.addAction(searchuser_action)
 
-        deluser_action = QAction(QIcon("icon/trash.png"), "Delete", self)
+        deluser_action = QAction(
+            QIcon("icon/trash.png"), "Delete University", self)
         deluser_action.triggered.connect(self.delete)
         file_menu.addAction(deluser_action)
+
+        rm_all_action = QAction(
+            QIcon("icon/criss-cross.png"), "Delete All Universities", self)
+        rm_all_action.triggered.connect(self.delete_all)
+        file_menu.addAction(rm_all_action)
+
+        about_action = QAction(QIcon("icon/info.png"), "About Developer", self)
+        about_action.triggered.connect(self.about)
+        file_menu.addAction(about_action)
 
         close_action = QAction(QIcon("icon/close.png"), "Close", self)
         close_action.triggered.connect(self.close_app)
         file_menu.addAction(close_action)
-
-        about_action = QAction(QIcon("icon/info.png"), "Developer", self)
-        about_action.triggered.connect(self.about)
-        help_menu.addAction(about_action)
 
     def loaddata(self):
         self.connection = sqlite3.connect("info.db")
@@ -212,6 +217,24 @@ class MainWindowUniversity(QMainWindow):
         dlg.exec_()
         self.loaddata()
 
+    def delete_all(self):
+        try:
+            self.conn = sqlite3.connect("info.db")
+            self.c = self.conn.cursor()
+            self.c.execute("DELETE from Universities")
+            self.conn.commit()
+            self.c.close()
+            self.conn.close()
+            QMessageBox.information(
+                QMessageBox(), 'Successful', 'All the records are removed from the database.')
+
+        except Exception as error:
+            print(error)
+            QMessageBox.warning(QMessageBox(), 'Error',
+                                'Could not delete the records from the database.')
+
+        self.loaddata()
+
     def search(self):
         dlg = SearchDialog.SearchUniversity()
         dlg.exec_()
@@ -223,23 +246,22 @@ class MainWindowUniversity(QMainWindow):
     def search_by(self, income):
         print(income)
 
-    def goToStudents(self):
-        self.close()
-        window = MainWindowStudent.MainWindowStudent(self)
-        window.show()
-        window.loaddata()
-
     def showdeparments(self, main_layout):
-        self.widef = QWidget(self)
-        self.widef.setFixedWidth(100)
-        self.but = QPushButton(self.widef)
-        self.but.clicked.connect(
-            lambda: self.removwidget(main_layout, self.widef))
-        main_layout.addWidget(self.widef, 0, 1)
+       # self.widef = QWidget(self)
+        # self.widef.setFixedWidth(100)
+        #self.but = QPushButton(self.widef)
+        # self.but.clicked.connect(
+        #   lambda: self.removwidget(main_layout, self.widef))
+        #main_layout.addWidget(self.widef, 0, 1)
+        return
 
     def removwidget(self, main_layout, widef):
         main_layout.removeWidget(self.widef)
-        self.widef.deleteLater()
+        try:
+            self.widef.deleteLater()
+        except Exception:
+            print("error")
+
         self.widef = None
 
     def logout(self):
