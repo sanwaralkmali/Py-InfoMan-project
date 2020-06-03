@@ -12,7 +12,7 @@ import sqlite3
 import time
 import MainWindowUniversity
 import LoginDialog as loginDialog
-import ShowAllStudents
+import ShowAllDepartment
 
 
 class MainWindowStudent(QMainWindow):
@@ -241,6 +241,6 @@ class MainWindowStudent(QMainWindow):
 
     def show_all_departments(self):
         print("hello")
-        window = ShowAllStudents.ShowAllStudents(self)
+        window = ShowAllDepartment.ShowAllDepartment(self)
         window.show()
         window.loaddata()
