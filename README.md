@@ -26,7 +26,7 @@ Manage your database using Infoman (Student , universities and departments) , < 
 * Login System
 
 * Student Window
-                @ Show Students  
+    @ Show Students  
 		@ Add Students
 		@ Delete Students
 		@ Search for Student
