@@ -23,6 +23,16 @@ class MainWindowDepartments(QMainWindow):
 
         self.conn = sqlite3.connect("info.db")
         self.c = self.conn.cursor()
+        self.c.execute(
+            "CREATE TABLE IF NOT EXISTS Departments (" +
+            "uni_id INTEGER," +
+            "dep_name TEXT NOT NULL, " +
+            "price INTEGER NOT NULL, " +
+            "info TEXT, " +
+            "FOREIGN KEY(uni_id) REFERENCES Universities(uni_id), " +
+            "PRIMARY KEY(uni_id,dep_name) ")
+        self.c.close()
+
         uni_id = u_id
         file_menu = self.menuBar().addMenu("&File")
 
@@ -130,7 +140,8 @@ class MainWindowDepartments(QMainWindow):
 
     def delete_department(self):
         qm = QMessageBox()
-        ret = qm.question(
+        qm.setWindowTitle("Warining")
+        ret = qm.warning(
             self, '', "Are You sure?", qm.Yes | qm.No)
         if ret == qm.Yes:
             unId = self.tableWidget.item(

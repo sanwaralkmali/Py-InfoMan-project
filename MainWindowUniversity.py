@@ -25,7 +25,9 @@ class MainWindowUniversity(QMainWindow):
         self.conn = sqlite3.connect("info.db")
         self.c = self.conn.cursor()
         self.c.execute(
-            "CREATE TABLE IF NOT EXISTS students(uni_id INTEGER PRIMARY KEY AUTOINCREMENT ,uni_name TEXT)")
+            "CREATE TABLE IF NOT EXISTS Universities (" +
+            "uni_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
+            "uni_name TEXT NOT NULL UNIQUE)")
         self.c.close()
 
         file_menu = self.menuBar().addMenu("&File")
@@ -44,10 +46,10 @@ class MainWindowUniversity(QMainWindow):
         self.tableWidget.horizontalHeader().setSortIndicatorShown(False)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
-        self.tableWidget.setFixedWidth(700)
+        self.tableWidget.setFixedWidth(800)
         self.tableWidget.setColumnWidth(0, 70)
-        self.tableWidget.setColumnWidth(1, 400)
-        self.tableWidget.setColumnWidth(2, 85)
+        self.tableWidget.setColumnWidth(1, 495)
+        self.tableWidget.setColumnWidth(2, 105)
         self.tableWidget.setColumnWidth(3, 125)
         self.tableWidget.setHorizontalHeaderLabels(
             ("ID", "University", "New ", "Departments"))
@@ -115,13 +117,23 @@ class MainWindowUniversity(QMainWindow):
         loout_Btn.clicked.connect(self.logout)
 
         space = QWidget(self)
-        space.setFixedWidth(50)
+        space.setFixedWidth(100)
 
         layout.addWidget(QBtn, 0, 1)
         layout.addWidget(space, 0, 2)
-        layout.addWidget(loout_Btn, 0, 3)
-
         toolbar.addWidget(self.container2)
+
+        logout_Btn = QAction(
+            QIcon("icon/logout.png"), "Logout", self)
+        logout_Btn.triggered.connect(self.logout)
+        logout_Btn.setStatusTip("LOGOUT")
+        toolbar.addAction(logout_Btn)
+
+        btn_ac_close = QAction(
+            QIcon("icon/criss-cross.png"), "Closs App", self)
+        btn_ac_close.triggered.connect(self.close_app)
+        btn_ac_close.setStatusTip("Closs App")
+        toolbar.addAction(btn_ac_close)
 
         show_deparments = QAction(
             QIcon("icon/school.png"), "Show All Deparments", self)
@@ -219,8 +231,8 @@ class MainWindowUniversity(QMainWindow):
 
     def delete_all(self):
         qm = QMessageBox()
-        ret = qm.question(
-            self, '', "Are you sure to remove all the students?", qm.Yes | qm.No)
+        ret = qm.warning(
+            self, '', "All the departments will be removed !\n\n\n Are You sure?", qm.Yes | qm.No)
         if ret == qm.Yes:
             try:
                 self.conn = sqlite3.connect("info.db")

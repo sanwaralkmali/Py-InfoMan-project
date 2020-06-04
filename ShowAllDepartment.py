@@ -23,11 +23,15 @@ class ShowAllDepartment(QMainWindow):
         self.tableWidget.setColumnCount(5)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
         self.tableWidget.horizontalHeader().setSortIndicatorShown(False)
-        self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.tableWidget.verticalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setCascadingSectionResizes(False)
         self.tableWidget.verticalHeader().setStretchLastSection(False)
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableWidget.setColumnWidth(0, 200)
+        self.tableWidget.setColumnWidth(1, 200)
+        self.tableWidget.setColumnWidth(2, 150)
+        self.tableWidget.setColumnWidth(3, 350)
+        self.tableWidget.setColumnWidth(4, 100)
         self.tableWidget.setHorizontalHeaderLabels(
             ("University", "Department", "price", "detailes", "Delete"))
 
@@ -78,7 +82,7 @@ class ShowAllDepartment(QMainWindow):
 
     def delete_department(self):
         qm = QMessageBox()
-        ret = qm.question(
+        ret = qm.warning(
             self, '', "Are You sure?", qm.Yes | qm.No)
         if ret == qm.Yes:
             unId = self.tableWidget.item(

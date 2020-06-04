@@ -28,7 +28,8 @@ class DeleteDialog(QDialog):
     def deletestudent(self):
 
         qm = QMessageBox()
-        ret = qm.question(
+        qm.setWindowTitle("Warining")
+        ret = qm.warning(
             self, '', "Are You sure?", qm.Yes | qm.No)
         if ret == qm.Yes:
             delrol = self.deleteinput.text()
@@ -73,13 +74,17 @@ class DeleteUniversity(QDialog):
 
     def deleteUniversity(self):
         qm = QMessageBox()
-        ret = qm.question(
-            self, '', "Are You sure?", qm.Yes | qm.No)
+        qm.setWindowTitle("Warining")
+        ret = qm.warning(
+            self, '', "All the departments in this uinversity will be removed !\n\n\n Are You sure?", qm.Yes | qm.No)
         if ret == qm.Yes:
             delrol = self.deleteinput.text()
             try:
                 self.conn = sqlite3.connect("info.db")
                 self.c = self.conn.cursor()
+                query = " DELETE FROM Departments Where uni_id = " + \
+                    str(delrol)
+                self.c.execute(query)
                 self.c.execute(
                     "DELETE from Universities WHERE uni_id= "+str(delrol))
                 self.conn.commit()
@@ -125,7 +130,9 @@ class DeleteUniversity(QDialog):
 
         def deleteDepartment(self):
             qm = QMessageBox()
-            ret = qm.question(
+            qm.setWindowTitle("Warining")
+
+            ret = qm.warning(
                 self, '', "Are You sure?", qm.Yes | qm.No)
             if ret == qm.Yes:
                 unId = self.unvIdInput.text()

@@ -23,7 +23,13 @@ class MainWindowStudent(QMainWindow):
         self.conn = sqlite3.connect("info.db")
         self.c = self.conn.cursor()
         self.c.execute(
-            "CREATE TABLE IF NOT EXISTS students(roll INTEGER PRIMARY KEY AUTOINCREMENT ,name TEXT,branch TEXT,sem INTEGER,mobile INTEGER,address TEXT)")
+            "CREATE TABLE IF NOT EXISTS Students (" +
+            " stu_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
+            "stu_name TEXT NOT NULL," +
+            "stu_surname TEXT," +
+            "phone_number TEXT," +
+            "stu_info TEXT)")
+
         self.c.close()
 
         file_menu = self.menuBar().addMenu("&File")
@@ -113,11 +119,23 @@ class MainWindowStudent(QMainWindow):
         loout_Btn.clicked.connect(self.logout)
 
         space = QWidget(self)
-        space.setFixedWidth(50)
+        space.setFixedWidth(120)
+
         layout.addWidget(QBtn, 0, 1)
         layout.addWidget(space, 0, 2)
-        layout.addWidget(loout_Btn, 0, 3)
         toolbar.addWidget(self.container2)
+
+        logout_Btn = QAction(
+            QIcon("icon/logout.png"), "Logout", self)
+        logout_Btn.triggered.connect(self.logout)
+        logout_Btn.setStatusTip("LOGOUT")
+        toolbar.addAction(logout_Btn)
+
+        btn_ac_close = QAction(
+            QIcon("icon/criss-cross.png"), "Closs App", self)
+        btn_ac_close.triggered.connect(self.close_app)
+        btn_ac_close.setStatusTip("Closs App")
+        toolbar.addAction(btn_ac_close)
 
         show_deparments = QAction(
             QIcon("icon/school.png"), "Show All Deparments", self)
@@ -193,7 +211,8 @@ class MainWindowStudent(QMainWindow):
 
     def delte_student(self):
         qm = QMessageBox()
-        ret = qm.question(
+        qm.setWindowTitle("remove")
+        ret = qm.warning(
             self, '', "Are You sure?", qm.Yes | qm.No)
         if ret == qm.Yes:
             delrol = self.tableWidget.item(
@@ -217,7 +236,7 @@ class MainWindowStudent(QMainWindow):
 
     def delete_all(self):
         qm = QMessageBox()
-        ret = qm.question(
+        ret = qm.warning(
             self, '', "Are you sure to remove all the students?", qm.Yes | qm.No)
         if ret == qm.Yes:
             try:

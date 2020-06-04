@@ -11,7 +11,7 @@ class SearchDialog(QDialog):
         self.QBtn = QPushButton()
         self.QBtn.setText("Search")
 
-        self.setWindowTitle("Search user")
+        self.setWindowTitle("Search Student")
         self.setFixedWidth(300)
         self.setFixedHeight(100)
         self.QBtn.clicked.connect(self.searchstudent)
@@ -43,6 +43,8 @@ class SearchDialog(QDialog):
             QMessageBox.warning(QMessageBox(), 'Error',
                                 'Could not Find student from the database.')
 
+        self.close()
+
 
 class SearchUniversity(QDialog):
     def __init__(self, *args, **kwargs):
@@ -51,19 +53,19 @@ class SearchUniversity(QDialog):
         self.QBtn = QPushButton()
         self.QBtn.setText("Search")
 
-        self.setWindowTitle("Search user")
+        self.setWindowTitle("Search University")
         self.setFixedWidth(300)
         self.setFixedHeight(100)
-        self.QBtn.clicked.connect(self.searchstudent)
+        self.QBtn.clicked.connect(self.search_university)
         layout = QVBoxLayout()
 
         self.searchinput = QLineEdit()
-        self.searchinput.setPlaceholderText("University ID")
+        self.searchinput.setPlaceholderText("University Name")
         layout.addWidget(self.searchinput)
         layout.addWidget(self.QBtn)
         self.setLayout(layout)
 
-    def searchstudent(self):
+    def search_university(self):
 
         searchrol = ""
         searchrol = self.searchinput.text()
@@ -79,6 +81,9 @@ class SearchUniversity(QDialog):
             self.conn.commit()
             self.c.close()
             self.conn.close()
-        except Exception:
+        except Exception as error:
+            print(error)
             QMessageBox.warning(QMessageBox(), 'Error',
                                 'Could not Find student from the database.')
+
+        self.close()

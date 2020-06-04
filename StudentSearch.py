@@ -83,7 +83,7 @@ class StudentSearch(QMainWindow):
 
     def delte_student(self):
         qm = QMessageBox()
-        ret = qm.question(
+        ret = qm.warning(
             self, '', "Are You sure?", qm.Yes | qm.No)
         if ret == qm.Yes:
             delrol = self.tableWidget.item(
