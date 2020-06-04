@@ -49,12 +49,13 @@ class StudentSearch(QMainWindow):
         toolbar.addWidget(self.container)
 
         close_deparments = QAction(
-            QIcon("icon/criss-cross.png"), "Close", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/criss-cross.png"), "Close", self)
         close_deparments.triggered.connect(self.close_app)
         close_deparments.setStatusTip("Close")
         toolbar.addAction(close_deparments)
 
-        close_action = QAction(QIcon("icon/close.png"), "Close", self)
+        close_action = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/close.png"), "Close", self)
         close_action.triggered.connect(self.close_app)
         file_menu.addAction(close_action)
 

@@ -35,8 +35,8 @@ class AboutDialog(QDialog):
         self.target = QPixmap(100, 100)
         self.target.fill(Qt.transparent)
 
-        pixmap = QPixmap('icon/author.jpg').scaled(100, 100,
-                                                   Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        pixmap = QPixmap('/home/salah/Desktop/Py-infoman-gui-project/icon/author.jpg').scaled(100, 100,
+                                                                                              Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
         painter = QPainter(self.target)
         painter.setRenderHint(QPainter.Antialiasing, True)

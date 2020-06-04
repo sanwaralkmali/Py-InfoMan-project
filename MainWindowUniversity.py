@@ -65,22 +65,25 @@ class MainWindowUniversity(QMainWindow):
         self.setStatusBar(statusbar)
 
         btn_ac_adduser = QAction(
-            QIcon("icon/real-estate.png"), "Add University", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/real-estate.png"), "Add University", self)
         btn_ac_adduser.triggered.connect(self.insert)
         btn_ac_adduser.setStatusTip("Add Student")
         toolbar.addAction(btn_ac_adduser)
 
-        btn_ac_refresh = QAction(QIcon("icon/refresh .png"), "Refresh", self)
+        btn_ac_refresh = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/refresh .png"), "Refresh", self)
         btn_ac_refresh.triggered.connect(self.loaddata)
         btn_ac_refresh.setStatusTip("Refresh Table")
         toolbar.addAction(btn_ac_refresh)
 
-        btn_ac_search = QAction(QIcon("icon/search.png"), "Search", self)
+        btn_ac_search = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/search.png"), "Search", self)
         btn_ac_search.triggered.connect(self.search)
         btn_ac_search.setStatusTip("Search User")
         toolbar.addAction(btn_ac_search)
 
-        btn_ac_delete = QAction(QIcon("icon/trash.png"), "Delete", self)
+        btn_ac_delete = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/trash.png"), "Delete", self)
         btn_ac_delete.triggered.connect(self.delete)
         btn_ac_delete.setStatusTip("Delete User")
         toolbar.addAction(btn_ac_delete)
@@ -107,12 +110,14 @@ class MainWindowUniversity(QMainWindow):
         layout.addWidget(search_by_name, 0, 0)
 
         QBtn = QPushButton()
-        QBtn.setIcon(QIcon("icon/search.png"))
+        QBtn.setIcon(
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/search.png"))
         QBtn.clicked.connect(
             lambda: self.search_by(search_by_name.text()))
 
         loout_Btn = QPushButton()
-        loout_Btn.setIcon(QIcon("icon/logout.png"))
+        loout_Btn.setIcon(
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/logout.png"))
         loout_Btn.setStatusTip("Logout")
         loout_Btn.clicked.connect(self.logout)
 
@@ -124,47 +129,49 @@ class MainWindowUniversity(QMainWindow):
         toolbar.addWidget(self.container2)
 
         logout_Btn = QAction(
-            QIcon("icon/logout.png"), "Logout", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/logout.png"), "Logout", self)
         logout_Btn.triggered.connect(self.logout)
         logout_Btn.setStatusTip("LOGOUT")
         toolbar.addAction(logout_Btn)
 
         btn_ac_close = QAction(
-            QIcon("icon/criss-cross.png"), "Closs App", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/criss-cross.png"), "Closs App", self)
         btn_ac_close.triggered.connect(self.close_app)
         btn_ac_close.setStatusTip("Closs App")
         toolbar.addAction(btn_ac_close)
 
         show_deparments = QAction(
-            QIcon("icon/school.png"), "Show All Deparments", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/school.png"), "Show All Deparments", self)
         show_deparments.triggered.connect(self.show_all_departments)
         file_menu.addAction(show_deparments)
 
         adduser_action = QAction(
-            QIcon("icon/real-estate.png"), "Insert University", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/real-estate.png"), "Insert University", self)
         adduser_action.triggered.connect(self.insert)
         file_menu.addAction(adduser_action)
 
         searchuser_action = QAction(
-            QIcon("icon/search.png"), "Search university", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/search.png"), "Search university", self)
         searchuser_action.triggered.connect(self.search)
         file_menu.addAction(searchuser_action)
 
         deluser_action = QAction(
-            QIcon("icon/trash.png"), "Delete University", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/trash.png"), "Delete University", self)
         deluser_action.triggered.connect(self.delete)
         file_menu.addAction(deluser_action)
 
         rm_all_action = QAction(
-            QIcon("icon/criss-cross.png"), "Delete All Universities", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/criss-cross.png"), "Delete All Universities", self)
         rm_all_action.triggered.connect(self.delete_all)
         file_menu.addAction(rm_all_action)
 
-        about_action = QAction(QIcon("icon/info.png"), "About Developer", self)
+        about_action = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/info.png"), "About Developer", self)
         about_action.triggered.connect(self.about)
         file_menu.addAction(about_action)
 
-        close_action = QAction(QIcon("icon/close.png"), "Close", self)
+        close_action = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/close.png"), "Close", self)
         close_action.triggered.connect(self.close_app)
         file_menu.addAction(close_action)
 

@@ -63,17 +63,20 @@ class MainWindowDepartments(QMainWindow):
         statusbar = QStatusBar()
         self.setStatusBar(statusbar)
 
-        btn_ac_adduser = QAction(QIcon("icon/add.png"), "Add Department", self)
+        btn_ac_adduser = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/add.png"), "Add Department", self)
         btn_ac_adduser.triggered.connect(lambda: self.insert(uni_id))
         btn_ac_adduser.setStatusTip("Add Student")
         toolbar.addAction(btn_ac_adduser)
 
-        btn_ac_refresh = QAction(QIcon("icon/refresh .png"), "Refresh", self)
+        btn_ac_refresh = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/refresh .png"), "Refresh", self)
         btn_ac_refresh.triggered.connect(lambda: self.loaddata(u_id))
         btn_ac_refresh.setStatusTip("Refresh Table")
         toolbar.addAction(btn_ac_refresh)
 
-        btn_ac_delete = QAction(QIcon("icon/trash.png"), "Delete", self)
+        btn_ac_delete = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/trash.png"), "Delete", self)
         btn_ac_delete.triggered.connect(lambda: self.delete(u_id))
         btn_ac_delete.setStatusTip("Delete User")
         toolbar.addAction(btn_ac_delete)
@@ -83,17 +86,18 @@ class MainWindowDepartments(QMainWindow):
         toolbar.addWidget(self.container)
 
         close_deparments = QAction(
-            QIcon("icon/logout.png"), "Logout", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/logout.png"), "Logout", self)
         close_deparments.triggered.connect(self.close_app)
         close_deparments.setStatusTip("Logout")
         toolbar.addAction(close_deparments)
 
         rm_all_action = QAction(
-            QIcon("icon/criss-cross.png"), "Delete All Deparments", self)
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/criss-cross.png"), "Delete All Deparments", self)
         rm_all_action.triggered.connect(lambda: self.delete_all(uni_id))
         file_menu.addAction(rm_all_action)
 
-        close_action = QAction(QIcon("icon/close.png"), "Close", self)
+        close_action = QAction(QIcon(
+            "/home/salah/Desktop/Py-infoman-gui-project/icon/close.png"), "Close", self)
         close_action.triggered.connect(self.close_app)
         file_menu.addAction(close_action)
 

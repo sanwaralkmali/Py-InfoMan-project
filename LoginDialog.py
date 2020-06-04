@@ -15,7 +15,8 @@ class LoginDialog(QDialog):
         layout = QVBoxLayout()
         self.container = QWidget(self)
         self.labelLog = QLabel(self.container)
-        self.pixmap = QPixmap('icon/login.png')
+        self.pixmap = QPixmap(
+            '/home/salah/Desktop/Py-infoman-gui-project/icon/login.png')
         self.labelLog.setPixmap(self.pixmap)
         self.labelLog.setFixedWidth(self.width())
         self.labelLog.setAlignment(Qt.AlignCenter)
@@ -55,12 +56,14 @@ class LoginChoice(QDialog):
 
         self.QBtn = QPushButton()
         self.QBtn.setFixedSize(130, 100)
-        self.QBtn.setIcon(QIcon("icon/school.png"))
+        self.QBtn.setIcon(
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/school.png"))
         self.QBtn.setIconSize(QSize(40, 40))
         self.QBtn.setText("Unversities")
 
         self.QBtn2 = QPushButton()
-        self.QBtn2.setIcon(QIcon("icon/male-and-female.png"))
+        self.QBtn2.setIcon(
+            QIcon("/home/salah/Desktop/Py-infoman-gui-project/icon/male-and-female.png"))
         self.QBtn2.setIconSize(QSize(40, 40))
         self.QBtn2.setText("Students")
         self.QBtn2.setFixedSize(130, 100)
