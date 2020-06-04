@@ -30,7 +30,7 @@ class MainWindowDepartments(QMainWindow):
             "price INTEGER NOT NULL, " +
             "info TEXT, " +
             "FOREIGN KEY(uni_id) REFERENCES Universities(uni_id), " +
-            "PRIMARY KEY(uni_id,dep_name) ")
+            "PRIMARY KEY(uni_id,dep_name) )")
         self.c.close()
 
         uni_id = u_id
